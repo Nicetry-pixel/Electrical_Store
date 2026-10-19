@@ -138,7 +138,7 @@ namespace Electrical_Store
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::Electrical_Store.Properties.Resources.ChatGPT_Image_9_сент__2026_г___13_22_29;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1267, 511);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);

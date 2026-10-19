@@ -128,9 +128,10 @@ namespace Electrical_Store
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackgroundImage = global::Electrical_Store.Properties.Resources.magazin_elektriki_bez_belogo_fona;
             this.pictureBox1.Location = new System.Drawing.Point(255, 148);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(749, 308);
+            this.pictureBox1.Size = new System.Drawing.Size(1088, 308);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
@@ -139,8 +140,8 @@ namespace Electrical_Store
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::Electrical_Store.Properties.Resources.ChatGPT_Image_9_сент__2026_г___13_22_29;
-            this.ClientSize = new System.Drawing.Size(1031, 511);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.ClientSize = new System.Drawing.Size(1355, 511);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
