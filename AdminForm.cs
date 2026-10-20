@@ -30,7 +30,7 @@ namespace Electrical_Store
         {
             UserForm usr = new UserForm();
             usr.Show();
-            this.Close();
+            this.Hide(); // Скрываем меню, а не закрываем
         }
 
         private void button3_Click(object sender, EventArgs e)

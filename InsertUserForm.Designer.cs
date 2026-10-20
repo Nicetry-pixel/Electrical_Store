@@ -29,12 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertUserForm));
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -52,49 +48,22 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.BackColor = System.Drawing.Color.Black;
-            this.comboBox1.ForeColor = System.Drawing.Color.White;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Да",
-            "Нет"});
-            this.comboBox1.Location = new System.Drawing.Point(325, 548);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(137, 40);
-            this.comboBox1.TabIndex = 41;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(12, 551);
+            this.label11.Location = new System.Drawing.Point(6, 603);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(281, 32);
             this.label11.TabIndex = 40;
             this.label11.Text = "Активный акаунт";
-            // 
-            // textBox9
-            // 
-            this.textBox9.BackColor = System.Drawing.Color.Black;
-            this.textBox9.ForeColor = System.Drawing.Color.White;
-            this.textBox9.Location = new System.Drawing.Point(686, 499);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(83, 40);
-            this.textBox9.TabIndex = 39;
-            // 
-            // textBox8
-            // 
-            this.textBox8.BackColor = System.Drawing.Color.Black;
-            this.textBox8.ForeColor = System.Drawing.Color.White;
-            this.textBox8.Location = new System.Drawing.Point(259, 497);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(112, 40);
-            this.textBox8.TabIndex = 38;
             // 
             // textBox7
             // 
@@ -104,15 +73,6 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(471, 40);
             this.textBox7.TabIndex = 37;
-            // 
-            // textBox6
-            // 
-            this.textBox6.BackColor = System.Drawing.Color.Black;
-            this.textBox6.ForeColor = System.Drawing.Color.White;
-            this.textBox6.Location = new System.Drawing.Point(165, 372);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(604, 40);
-            this.textBox6.TabIndex = 36;
             // 
             // textBox5
             // 
@@ -137,7 +97,7 @@
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(397, 500);
+            this.label10.Location = new System.Drawing.Point(13, 556);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(283, 32);
             this.label10.TabIndex = 33;
@@ -269,6 +229,7 @@
             this.button1.TabIndex = 42;
             this.button1.Text = "Выход ";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -281,6 +242,7 @@
             this.button2.TabIndex = 43;
             this.button2.Text = "Изменить";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label4
             // 
@@ -293,20 +255,60 @@
             this.label4.TabIndex = 27;
             this.label4.Text = "Изменение данных";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.BackColor = System.Drawing.Color.Black;
+            this.comboBox1.ForeColor = System.Drawing.Color.White;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Да",
+            "Нет"});
+            this.comboBox1.Location = new System.Drawing.Point(150, 372);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(358, 40);
+            this.comboBox1.TabIndex = 41;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(310, 613);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(15, 14);
+            this.checkBox1.TabIndex = 44;
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePicker2.CalendarMonthBackground = System.Drawing.Color.White;
+            this.dateTimePicker2.Location = new System.Drawing.Point(298, 496);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 40);
+            this.dateTimePicker2.TabIndex = 48;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePicker1.CalendarMonthBackground = System.Drawing.Color.White;
+            this.dateTimePicker1.Location = new System.Drawing.Point(298, 550);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 40);
+            this.dateTimePicker1.TabIndex = 49;
+            // 
             // InsertUserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(784, 656);
+            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.dateTimePicker2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.textBox9);
-            this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.textBox6);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label10);
@@ -334,13 +336,8 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label10;
@@ -358,5 +355,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }

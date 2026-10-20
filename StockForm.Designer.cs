@@ -1,4 +1,6 @@
-﻿namespace Electrical_Store
+﻿using System.Windows.Forms;
+
+namespace Electrical_Store
 {
     partial class StockForm
     {
@@ -57,6 +59,11 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(775, 378);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // 
             // button1
             // 

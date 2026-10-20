@@ -42,8 +42,6 @@
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -59,6 +57,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // button2
@@ -192,24 +192,6 @@
             this.textBox4.Size = new System.Drawing.Size(743, 37);
             this.textBox4.TabIndex = 47;
             // 
-            // textBox3
-            // 
-            this.textBox3.BackColor = System.Drawing.Color.Black;
-            this.textBox3.ForeColor = System.Drawing.Color.White;
-            this.textBox3.Location = new System.Drawing.Point(813, 159);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(201, 37);
-            this.textBox3.TabIndex = 46;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BackColor = System.Drawing.Color.Black;
-            this.textBox2.ForeColor = System.Drawing.Color.White;
-            this.textBox2.Location = new System.Drawing.Point(737, 9);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(169, 37);
-            this.textBox2.TabIndex = 45;
-            // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.Black;
@@ -235,7 +217,7 @@
             this.label13.AutoSize = true;
             this.label13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(496, 12);
+            this.label13.Location = new System.Drawing.Point(538, 115);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(213, 29);
             this.label13.TabIndex = 42;
@@ -373,12 +355,32 @@
             this.label1.TabIndex = 30;
             this.label1.Text = "Артикуль";
             // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePicker2.CalendarMonthBackground = System.Drawing.Color.White;
+            this.dateTimePicker2.Location = new System.Drawing.Point(813, 107);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 37);
+            this.dateTimePicker2.TabIndex = 60;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePicker1.CalendarMonthBackground = System.Drawing.Color.White;
+            this.dateTimePicker1.Location = new System.Drawing.Point(813, 162);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 37);
+            this.dateTimePicker1.TabIndex = 61;
+            // 
             // InsertProductForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1070, 594);
+            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox8);
@@ -392,8 +394,6 @@
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.textBox4);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
@@ -434,8 +434,6 @@
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
@@ -451,5 +449,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }

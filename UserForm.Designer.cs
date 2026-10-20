@@ -56,6 +56,10 @@ namespace Electrical_Store
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(814, 442);
             this.dataGridView1.TabIndex = 0;
+            // Привязываем таблицу ко всем четырем сторонам (растягивается)
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // button1
             // 
@@ -70,6 +74,9 @@ namespace Electrical_Store
             this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.buttonAdd_Click);
+            // Привязываем к левому нижнему углу
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             // 
             // button2
             // 
@@ -84,6 +91,9 @@ namespace Electrical_Store
             this.button2.Text = "Изменить";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.buttonEdit_Click);
+            // Привязываем к левому нижнему углу
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             // 
             // button3
             // 
@@ -98,6 +108,8 @@ namespace Electrical_Store
             this.button3.Text = "Выйти";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.buttonExit_Click);
+            // Привязываем к правому нижнему углу
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // label1
             // 
@@ -110,6 +122,8 @@ namespace Electrical_Store
             this.label1.Size = new System.Drawing.Size(390, 29);
             this.label1.TabIndex = 8;
             this.label1.Text = "Общее количество записей";
+            // Привязываем к левому нижнему углу (не уедет при растягивании)
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             // 
             // label2
             // 

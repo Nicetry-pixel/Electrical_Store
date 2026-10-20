@@ -45,13 +45,13 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // textBox1
@@ -218,15 +218,6 @@
             this.textBox7.Size = new System.Drawing.Size(471, 40);
             this.textBox7.TabIndex = 16;
             // 
-            // textBox8
-            // 
-            this.textBox8.BackColor = System.Drawing.Color.Black;
-            this.textBox8.ForeColor = System.Drawing.Color.White;
-            this.textBox8.Location = new System.Drawing.Point(259, 499);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(112, 40);
-            this.textBox8.TabIndex = 17;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -295,19 +286,28 @@
             this.dateTimePicker1.Size = new System.Drawing.Size(200, 40);
             this.dateTimePicker1.TabIndex = 46;
             // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePicker2.CalendarMonthBackground = System.Drawing.Color.White;
+            this.dateTimePicker2.Location = new System.Drawing.Point(279, 498);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 40);
+            this.dateTimePicker2.TabIndex = 47;
+            // 
             // InputUserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(784, 655);
+            this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox4);
@@ -353,12 +353,12 @@
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
     }
 }

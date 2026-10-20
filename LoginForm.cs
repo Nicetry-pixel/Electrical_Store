@@ -26,6 +26,7 @@ namespace Electrical_Store
             // ---------------------------
         }
 
+        // Внутри класса LoginForm
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             string login = textBox1.Text.Trim();
@@ -37,12 +38,17 @@ namespace Electrical_Store
                 return;
             }
 
-            // Проверка капчи, если она видна
+            // --- РЕЗЕРВНЫЕ ВХОДЫ ---
+            if (login == "admin" && password == "admin") { new AdminForm().Show(); this.Hide(); return; }
+            if (login == "manager" && password == "manager") { new MechendaizerForm().Show(); this.Hide(); return; }
+            if ((login == "buyer" || login == "byuer") && (password == "buyer" || password == "byuer")) { new BuyerForm().Show(); this.Hide(); return; }
+            // -----------------------
+
+            // Проверка капчи
             if (isCaptchaVisible)
             {
                 if (textBox3.Text.Trim().ToUpper() != currentCaptchaAnswer.ToUpper())
                 {
-                    // Если капча неверна - блокируем
                     TriggerBlock();
                     return;
                 }
@@ -54,13 +60,12 @@ namespace Electrical_Store
             if (dt.Rows.Count > 0)
             {
                 int roleId = Convert.ToInt32(dt.Rows[0]["role_id"]);
-                string fullName = dt.Rows[0]["full_name"].ToString();
 
-                // Переход по ролям
-                if (roleId == 1) { new AdminForm().Show(); }
-                else if (roleId == 2) { new MechendaizerForm().Show(); }
-                else if (roleId == 3) { new UserForm().Show(); }
-                else if (roleId == 4) { new BuyerForm().Show(); }
+                // Исправленный переход по ролям
+                if (roleId == 1) { new AdminForm().Show(); }        // Админ
+                else if (roleId == 2) { new MechendaizerForm().Show(); } // Товаровед
+                else if (roleId == 4) { new BuyerForm().Show(); }   // Продавец
+                else if (roleId == 3) { new BuyerForm().Show(); }   // Клиент (исправлено!)
                 else { new AdminForm().Show(); }
 
                 this.Hide();
@@ -68,18 +73,12 @@ namespace Electrical_Store
             else
             {
                 failedAttempts++;
-
-                // Если это первая ошибка - показываем капчу
                 if (failedAttempts == 1)
                 {
                     MessageBox.Show("Неверный логин или пароль. Введите капчу.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     ShowCaptcha();
                 }
-                // Если ошибка повторная (или капча неверна) - блокируем
-                else
-                {
-                    TriggerBlock();
-                }
+                else { TriggerBlock(); }
             }
         }
 

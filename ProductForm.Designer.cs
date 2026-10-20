@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace Electrical_Store
 {
     partial class ProductForm
@@ -29,7 +31,6 @@ namespace Electrical_Store
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProductForm));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,19 +45,14 @@ namespace Electrical_Store
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.GridColor = System.Drawing.Color.DarkGray;
             this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(818, 576);
             this.dataGridView1.TabIndex = 0;
             // 
@@ -110,6 +106,7 @@ namespace Electrical_Store
             this.button5.TabIndex = 9;
             this.button5.Text = "Корзина";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label1
             // 
@@ -133,7 +130,7 @@ namespace Electrical_Store
             this.button4.TabIndex = 11;
             this.button4.Text = "Вперёд";
             this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.buttonNext_Click);
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button6
             // 
@@ -146,7 +143,7 @@ namespace Electrical_Store
             this.button6.TabIndex = 12;
             this.button6.Text = "Назад";
             this.button6.UseVisualStyleBackColor = false;
-            this.button6.Click += new System.EventHandler(this.buttonPrev_Click);
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // ProductForm
             // 

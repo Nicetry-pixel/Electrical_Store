@@ -14,71 +14,85 @@ namespace Electrical_Store
         public ProductForm()
         {
             InitializeComponent();
+
+            // --- ЖЕСТКАЯ НАСТРОЙКА ТАБЛИЦЫ ---
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+
+            // Настройка ширины колонок: AllCells подстраивает под текст и добавляет скролл, если не влезает
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.DefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Regular);
+            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Bold);
+            dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.False; // Запрет переноса текста
+            dataGridView1.RowTemplate.Height = 30;
+
+            // --- ЖЕСТКАЯ НАСТРОЙКА КНОПОК ПАГИНАЦИИ ---
+            // ВАЖНО: Если у вас в дизайнере кнопки называются по-другому (например, btnNext), 
+            // замените button4 и button6 на ваши названия.
+            button4.Text = "Вперёд >";
+            button4.BackColor = Color.Black;
+            button4.ForeColor = Color.White; // Белый текст
+            button4.FlatStyle = FlatStyle.Flat;
+            button4.Click += (s, e) => {
+                int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                if (currentPage < totalPages) { currentPage++; LoadProducts(); }
+            };
+
+            button6.Text = "< Назад";
+            button6.BackColor = Color.Black;
+            button6.ForeColor = Color.White; // Белый текст
+            button6.FlatStyle = FlatStyle.Flat;
+            button6.Click += (s, e) => {
+                if (currentPage > 1) { currentPage--; LoadProducts(); }
+            };
+
             LoadProducts();
         }
 
         private void LoadProducts()
         {
-            DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM products");
-            totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
-            label1.Text = $"Общее количество записей: {totalRecords}";
-
-            int offset = (currentPage - 1) * pageSize;
-            string query = $@"SELECT p.id, p.sku, p.name, c.name as category, p.brand, p.retail_price, p.warranty_months 
-                              FROM products p 
-                              LEFT JOIN categories c ON p.category_id = c.id 
-                              LIMIT {pageSize} OFFSET {offset}";
-
-            DataTable dt = DbHelper.ExecuteQuery(query);
-            dataGridView1.DataSource = dt;
-
-            if (dataGridView1.Columns["id"] != null) dataGridView1.Columns["id"].Visible = false;
-
-            UpdatePageButtons();
-        }
-
-        private void UpdatePageButtons()
-        {
-            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            label1.Text = $"{currentPage} / {totalPages}";
-            button2.Enabled = currentPage > 1;
-            button3.Enabled = currentPage < totalPages;
-        }
-
-        private void buttonPrev_Click(object sender, EventArgs e)
-        {
-            if (currentPage > 1) { currentPage--; LoadProducts(); }
-        }
-
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            if (currentPage < totalPages) { currentPage++; LoadProducts(); }
-        }
-
-        private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
+            try
             {
-                // Пример отображения изображения. Предполагаем, что картинки лежат в папке проекта и называются по SKU (например, GEN-5KW-01.jpg)
-                string sku = dataGridView1.SelectedRows[0].Cells["sku"].Value.ToString();
-                string imagePath = $"{sku}.jpg";
+                DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM products");
+                totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
 
-                if (System.IO.File.Exists(imagePath))
+                int offset = (currentPage - 1) * pageSize;
+                string query = $@"SELECT p.id, p.sku, p.name, c.name as category, p.brand, p.retail_price, p.warranty_months 
+                                  FROM products p 
+                                  LEFT JOIN categories c ON p.category_id = c.id 
+                                  LIMIT {pageSize} OFFSET {offset}";
+
+                DataTable dt = DbHelper.ExecuteQuery(query);
+                dataGridView1.DataSource = dt;
+
+                if (dataGridView1.Columns.Count > 0)
                 {
-                    //pictureBox1.Image = Image.FromFile(imagePath);
+                    dataGridView1.Columns["id"].Visible = false;
+                    dataGridView1.Columns["sku"].HeaderText = "Артикул";
+                    dataGridView1.Columns["name"].HeaderText = "Наименование";
+                    dataGridView1.Columns["category"].HeaderText = "Категория";
+                    dataGridView1.Columns["brand"].HeaderText = "Бренд";
+                    dataGridView1.Columns["retail_price"].HeaderText = "Цена";
+                    dataGridView1.Columns["warranty_months"].HeaderText = "Гарантия";
                 }
-                else
-                {
-                    //pictureBoxProduct.Image = null; // Или системная заглушка
-                }
+
+                int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                if (totalPages == 0) totalPages = 1;
+                label1.Text = $"Всего записей: {totalRecords} | Стр. {currentPage} из {totalPages}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка: " + ex.Message);
             }
         }
 
+        // Кнопки "Добавить", "Изменить", "Выход", "Корзина" 
+        // (Привязка через дизайнер, или через += как выше, если они не работают)
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            new InputProductForm().ShowDialog();
-            LoadProducts();
+            if (new InputProductForm().ShowDialog() == DialogResult.OK) { currentPage = 1; LoadProducts(); }
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
@@ -86,14 +100,41 @@ namespace Electrical_Store
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id"].Value);
-               // new InsertProductForm(id).ShowDialog();
-                LoadProducts();
+                if (new InsertProductForm(id).ShowDialog() == DialogResult.OK) LoadProducts();
             }
+            else MessageBox.Show("Выберите товар.");
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
+            AdminForm admin = new AdminForm();
+            admin.ShowDialog();
             this.Close();
+        }
+
+        private void button5_Click(object sender, EventArgs e) => new BukketForm().ShowDialog();
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // Вычисляем общее количество страниц
+            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            // Если мы не на последней странице, переключаем на следующую
+            if (currentPage < totalPages)
+            {
+                currentPage++;
+                LoadProducts(); // Загружаем новые данные
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            // Если мы не на первой странице, переключаем на предыдущую
+            if (currentPage > 1)
+            {
+                currentPage--;
+                LoadProducts(); // Загружаем новые данные
+            }
         }
     }
 }
