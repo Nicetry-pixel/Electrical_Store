@@ -24,8 +24,6 @@ namespace Electrical_Store
             this.Close();
         }
 
-      
-
         private void button2_Click(object sender, EventArgs e)
         {
             UserForm usr = new UserForm();
@@ -45,6 +43,13 @@ namespace Electrical_Store
             OrderForm order = new OrderForm();
             order.Show();
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            StockForm stock = new StockForm();
+            stock.Show();
+            this.Close();       
         }
     }
 }
