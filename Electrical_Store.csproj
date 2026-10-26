@@ -180,6 +180,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Session.cs" />
     <Compile Include="StockForm.cs">
       <SubType>Form</SubType>
     </Compile>

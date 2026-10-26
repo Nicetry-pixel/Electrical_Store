@@ -55,6 +55,7 @@ namespace Electrical_Store
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(818, 576);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
             // 
             // button1
             // 
@@ -117,7 +118,7 @@ namespace Electrical_Store
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(254, 192);
             this.label1.TabIndex = 10;
-            this.label1.Text = "Двойное \r\nнажатие \r\nпо товару\r\nавтоматически \r\nдобавлет \r\nего в корзину";
+            this.label1.Text = "Двойное \r\nнажатие \r\nпо товару\r\nавтоматически \r\nудаляет \r\nзапись\r\n";
             // 
             // button4
             // 

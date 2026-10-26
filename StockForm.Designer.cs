@@ -62,6 +62,7 @@ namespace Electrical_Store
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(775, 378);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
             // 
             // buttonExit
             // 
@@ -113,6 +114,7 @@ namespace Electrical_Store
             this.buttonPrev.TabIndex = 12;
             this.buttonPrev.Text = "<";
             this.buttonPrev.UseVisualStyleBackColor = false;
+            this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
             // 
             // buttonNext
             // 
@@ -126,6 +128,7 @@ namespace Electrical_Store
             this.buttonNext.TabIndex = 13;
             this.buttonNext.Text = ">";
             this.buttonNext.UseVisualStyleBackColor = false;
+            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
             // 
             // StockForm
             // 

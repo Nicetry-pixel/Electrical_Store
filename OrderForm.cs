@@ -11,6 +11,7 @@ namespace Electrical_Store
         private int pageSize = 10;
         private int totalRecords = 0;
 
+
         public OrderForm()
         {
             InitializeComponent();
@@ -99,9 +100,51 @@ namespace Electrical_Store
 
         private void button3_Click(object sender, EventArgs e) // Кнопка Выход
         {
-            AdminForm admin = new AdminForm();
-            admin.Show();
+            MessageBox.Show("Текущая роль в сессии: " + Session.CurrentUserRoleId.ToString(), "Отладка");
+            // -------------------
+
+            if (Session.CurrentUserRoleId == 1)
+            {
+                AdminForm admin = new AdminForm();
+                admin.Show();
+            }
+            else if (Session.CurrentUserRoleId == 2)
+            {
+                MechendaizerForm merch = new MechendaizerForm();
+                merch.Show();
+            }
+            else if (Session.CurrentUserRoleId == 4)
+            {
+                BuyerForm buyer = new BuyerForm();
+                buyer.Show();
+            }
+
             this.Close();
+        }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                int id = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id"].Value);
+                string orderNumber = dataGridView1.Rows[e.RowIndex].Cells["order_number"].Value.ToString();
+
+                if (MessageBox.Show($"Вы точно хотите удалить заказ №{orderNumber}?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // При удалении заказа, позиции этого заказа (order_items) удалятся автоматически 
+                        // благодаря правилу ON DELETE CASCADE в вашей БД.
+                        DbHelper.ExecuteNonQuery($"DELETE FROM orders WHERE id = {id}");
+                        MessageBox.Show("Заказ удален!");
+                        LoadOrders(); // Обновляем таблицу
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ошибка при удалении заказа: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

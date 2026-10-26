@@ -11,44 +11,50 @@ namespace Electrical_Store
         private int pageSize = 10;
         private int totalRecords = 0;
 
-        public ProductForm()
+        private int _roleId;
+
+        // Объявляем переменную на уровне всего класса
+        private bool _canEdit;
+
+        // Конструктор с параметром (по умолчанию true)
+        public ProductForm(bool canEdit = true, int roleId = 1)
         {
             InitializeComponent();
 
-            // --- ЖЕСТКАЯ НАСТРОЙКА ТАБЛИЦЫ ---
+            // Присваиваем значение
+            _canEdit = canEdit;
+            _roleId = roleId;
+
+            // --- НАСТРОЙКА DataGridView ---
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
-
-            // Настройка ширины колонок: AllCells подстраивает под текст и добавляет скролл, если не влезает
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.DefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Regular);
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Bold);
-            dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.False; // Запрет переноса текста
             dataGridView1.RowTemplate.Height = 30;
 
-            // --- ЖЕСТКАЯ НАСТРОЙКА КНОПОК ПАГИНАЦИИ ---
-            // ВАЖНО: Если у вас в дизайнере кнопки называются по-другому (например, btnNext), 
-            // замените button4 и button6 на ваши названия.
-            button4.Text = "Вперёд >";
-            button4.BackColor = Color.Black;
-            button4.ForeColor = Color.White; // Белый текст
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Click += (s, e) => {
-                int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-                if (currentPage < totalPages) { currentPage++; LoadProducts(); }
-            };
+            // --- ПРОВЕРКА ПРАВ (Скрываем кнопки для продавца) ---
+            if (!_canEdit)
+            {
+                button1.Visible = false; // Кнопка "Добавить"
+                button2.Visible = false; // Кнопка "Изменить"
+                                         // Если кнопки называются иначе (например, buttonAdd, buttonEdit), замените их имена здесь
 
-            button6.Text = "< Назад";
-            button6.BackColor = Color.Black;
-            button6.ForeColor = Color.White; // Белый текст
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.Click += (s, e) => {
-                if (currentPage > 1) { currentPage--; LoadProducts(); }
-            };
+                dataGridView1.ContextMenuStrip = null; // Отключаем меню ПКМ (удаление)
+            }
+
+            // Настройка кнопок пагинации (напоминаю, проверьте их имена в дизайнере)
+            try
+            {
+                button4.Text = "Вперёд >"; button4.ForeColor = Color.White; button4.BackColor = Color.Black;
+                button6.Text = "< Назад"; button6.ForeColor = Color.White; button6.BackColor = Color.Black;
+            }
+            catch { }
 
             LoadProducts();
+            _roleId = roleId;
         }
 
         private void LoadProducts()
@@ -88,15 +94,36 @@ namespace Electrical_Store
             }
         }
 
-        // Кнопки "Добавить", "Изменить", "Выход", "Корзина" 
-        // (Привязка через дизайнер, или через += как выше, если они не работают)
-        private void buttonAdd_Click(object sender, EventArgs e)
+        // События пагинации
+        private void button4_Click(object sender, EventArgs e) // Вперёд
         {
-            if (new InputProductForm().ShowDialog() == DialogResult.OK) { currentPage = 1; LoadProducts(); }
+            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+            if (currentPage < totalPages) { currentPage++; LoadProducts(); }
         }
 
+        private void button6_Click(object sender, EventArgs e) // Назад
+        {
+            if (currentPage > 1) { currentPage--; LoadProducts(); }
+        }
+
+        // Событие кнопки Добавить
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            // Проверка на всякий случай (хотя кнопка скрыта для продавца)
+            if (!_canEdit) return;
+
+            if (new InputProductForm().ShowDialog() == DialogResult.OK)
+            {
+                currentPage = 1;
+                LoadProducts();
+            }
+        }
+
+        // Событие кнопки Изменить
         private void buttonEdit_Click(object sender, EventArgs e)
         {
+            if (!_canEdit) return;
+
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id"].Value);
@@ -105,35 +132,60 @@ namespace Electrical_Store
             else MessageBox.Show("Выберите товар.");
         }
 
+        // Кнопка Выход (оставляем только ОДИН этот метод, чтобы не было ошибки CS0111)
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            AdminForm admin = new AdminForm();
-            admin.ShowDialog();
+            MessageBox.Show("Текущая роль в сессии: " + Session.CurrentUserRoleId.ToString(), "Отладка");
+            // -------------------
+
+            if (Session.CurrentUserRoleId == 1)
+            {
+                AdminForm admin = new AdminForm();
+                admin.Show();
+            }
+            else if (Session.CurrentUserRoleId == 2)
+            {
+                MechendaizerForm merch = new MechendaizerForm();
+                merch.Show();
+            }
+            else if (Session.CurrentUserRoleId == 4)
+            {
+                BuyerForm buyer = new BuyerForm();
+                buyer.Show();
+            }
+
             this.Close();
         }
 
-        private void button5_Click(object sender, EventArgs e) => new BukketForm().ShowDialog();
-
-        private void button4_Click(object sender, EventArgs e)
+        // Кнопка Корзина
+        private void button5_Click(object sender, EventArgs e)
         {
-            // Вычисляем общее количество страниц
-            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-            // Если мы не на последней странице, переключаем на следующую
-            if (currentPage < totalPages)
-            {
-                currentPage++;
-                LoadProducts(); // Загружаем новые данные
-            }
+            new BukketForm().ShowDialog();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Если мы не на первой странице, переключаем на предыдущую
-            if (currentPage > 1)
+            // Если у пользователя нет прав на редактирование (продавец), блокируем удаление
+            if (!_canEdit) return;
+
+            if (e.RowIndex >= 0)
             {
-                currentPage--;
-                LoadProducts(); // Загружаем новые данные
+                int id = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id"].Value);
+                string productName = dataGridView1.Rows[e.RowIndex].Cells["name"].Value.ToString();
+
+                if (MessageBox.Show($"Вы точно хотите удалить товар:\n{productName}?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        DbHelper.ExecuteNonQuery($"DELETE FROM products WHERE id = {id}");
+                        MessageBox.Show("Товар удален!");
+                        LoadProducts(); // Обновляем таблицу
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Невозможно удалить товар (он есть на складе или в заказах).\nОшибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
     }

@@ -39,10 +39,24 @@ namespace Electrical_Store
             }
 
             // --- РЕЗЕРВНЫЕ ВХОДЫ ---
-            if (login == "admin" && password == "admin") { new AdminForm().Show(); this.Hide(); return; }
-            if (login == "manager" && password == "manager") { new MechendaizerForm().Show(); this.Hide(); return; }
-            if ((login == "buyer" || login == "byuer") && (password == "buyer" || password == "byuer")) { new BuyerForm().Show(); this.Hide(); return; }
-            // -----------------------
+            if (login == "admin" && password == "admin")
+            {
+                Session.CurrentUserRoleId = 1; // Запоминаем, что это Админ
+                new AdminForm().Show();
+                this.Hide(); return;
+            }
+            if (login == "manager" && password == "manager")
+            {
+                Session.CurrentUserRoleId = 2; // Товаровед
+                new MechendaizerForm().Show();
+                this.Hide(); return;
+            }
+            if ((login == "buyer" || login == "byuer") && (password == "buyer" || password == "byuer"))
+            {
+                Session.CurrentUserRoleId = 4; // Продавец
+                new BuyerForm().Show();
+                this.Hide(); return;
+            }
 
             // Проверка капчи
             if (isCaptchaVisible)
@@ -60,12 +74,12 @@ namespace Electrical_Store
             if (dt.Rows.Count > 0)
             {
                 int roleId = Convert.ToInt32(dt.Rows[0]["role_id"]);
+                Session.CurrentUserRoleId = roleId; // Запоминаем роль из БД
 
-                // Исправленный переход по ролям
-                if (roleId == 1) { new AdminForm().Show(); }        // Админ
-                else if (roleId == 2) { new MechendaizerForm().Show(); } // Товаровед
-                else if (roleId == 4) { new BuyerForm().Show(); }   // Продавец
-                else if (roleId == 3) { new BuyerForm().Show(); }   // Клиент (исправлено!)
+                if (roleId == 1) { new AdminForm().Show(); }
+                else if (roleId == 2) { new MechendaizerForm().Show(); }
+                else if (roleId == 4) { new BuyerForm().Show(); }
+                else if (roleId == 3) { new BuyerForm().Show(); }
                 else { new AdminForm().Show(); }
 
                 this.Hide();

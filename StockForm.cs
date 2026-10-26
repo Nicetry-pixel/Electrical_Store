@@ -11,6 +11,7 @@ namespace Electrical_Store
         private int pageSize = 10;
         private int totalRecords = 0;
 
+        // Конструктор (убрал лишние привязки событий)
         public StockForm()
         {
             InitializeComponent();
@@ -26,23 +27,20 @@ namespace Electrical_Store
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Bold);
             dataGridView1.RowTemplate.Height = 30;
 
-            // --- ПРИНУДИТЕЛЬНАЯ ПРИВЯЗКА КНОПОК ---
-            // ВАЖНО: Если в дизайнере кнопки называются иначе, замените buttonPrev, buttonNext и buttonExit
-            // на те имена, которые у вас в свойствах (Name).
-            this.buttonPrev.Click += new EventHandler(buttonPrev_Click);
-            this.buttonNext.Click += new EventHandler(buttonNext_Click);
-            this.buttonExit.Click += new EventHandler(buttonExit_Click);
+            // Настройка внешнего вида кнопок пагинации
+            try
+            {
+                buttonPrev.Text = "<";
+                buttonPrev.BackColor = Color.Black;
+                buttonPrev.ForeColor = Color.White;
+                buttonPrev.FlatStyle = FlatStyle.Flat;
 
-            // Настройка внешнего вида кнопок
-            buttonPrev.Text = "<";
-            buttonPrev.BackColor = Color.Black;
-            buttonPrev.ForeColor = Color.White;
-            buttonPrev.FlatStyle = FlatStyle.Flat;
-
-            buttonNext.Text = ">";
-            buttonNext.BackColor = Color.Black;
-            buttonNext.ForeColor = Color.White;
-            buttonNext.FlatStyle = FlatStyle.Flat;
+                buttonNext.Text = ">";
+                buttonNext.BackColor = Color.Black;
+                buttonNext.ForeColor = Color.White;
+                buttonNext.FlatStyle = FlatStyle.Flat;
+            }
+            catch { }
 
             LoadStock();
         }
@@ -51,11 +49,9 @@ namespace Electrical_Store
         {
             try
             {
-                // 1. Считаем общее количество
                 DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM stock");
                 totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
 
-                // 2. Загружаем данные
                 int offset = (currentPage - 1) * pageSize;
                 string query = $@"SELECT s.id, p.name as product_name, s.quantity, 
                                          s.reserved_quantity, s.min_stock_level, s.location 
@@ -72,7 +68,6 @@ namespace Electrical_Store
                 }
                 else
                 {
-                    // Если данных нет, но COUNT показывает 50, значит таблица stock пуста или JOIN не работает
                     dataGridView1.DataSource = null;
                 }
 
@@ -101,19 +96,17 @@ namespace Electrical_Store
             int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
             if (totalPages == 0) totalPages = 1;
 
-            // В вашем дизайнере label1 отвечает за текст, label2 - за вывод "50" или номеров страниц
             label1.Text = $"Общее количество записей: {totalRecords}";
-            label2.Text = $"{currentPage} / {totalPages}"; // Или просто {currentPage}
+            label2.Text = $"{currentPage} / {totalPages}";
 
-            // ПРИНУДИТЕЛЬНО включаем/выключаем кнопки
             buttonPrev.Enabled = currentPage > 1;
             buttonNext.Enabled = currentPage < totalPages;
 
-            // Перекрашиваем, чтобы они не выглядели серыми, если активны
             buttonPrev.BackColor = buttonPrev.Enabled ? Color.Black : Color.DimGray;
             buttonNext.BackColor = buttonNext.Enabled ? Color.Black : Color.DimGray;
         }
 
+        // События пагинации (они должны быть привязаны в дизайнере!)
         private void buttonPrev_Click(object sender, EventArgs e)
         {
             if (currentPage > 1)
@@ -133,12 +126,52 @@ namespace Electrical_Store
             }
         }
 
+        // Кнопка Выход
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            // Выход обратно в меню Администратора
-            AdminForm admin = new AdminForm();
-            admin.Show();
-            this.Close();
+            // Блокируем кнопку, чтобы предотвратить случайный двойной клик
+            buttonExit.Enabled = false;
+
+            if (Session.CurrentUserRoleId == 1)
+            {
+                AdminForm admin = new AdminForm();
+                admin.Show();
+            }
+            else if (Session.CurrentUserRoleId == 2)
+            {
+                MechendaizerForm merch = new MechendaizerForm();
+                merch.Show();
+            }
+            else if (Session.CurrentUserRoleId == 4)
+            {
+                BuyerForm buyer = new BuyerForm();
+                buyer.Show();
+            }
+
+            this.Hide();
+        }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                int id = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id"].Value);
+                string productName = dataGridView1.Rows[e.RowIndex].Cells["product_name"].Value.ToString();
+
+                if (MessageBox.Show($"Вы точно хотите удалить запись склада для товара:\n{productName}?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        DbHelper.ExecuteNonQuery($"DELETE FROM stock WHERE id = {id}");
+                        MessageBox.Show("Запись удалена!");
+                        LoadStock(); // Обновляем таблицу
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Ошибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

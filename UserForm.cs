@@ -124,5 +124,29 @@ namespace Electrical_Store
                 MessageBox.Show("Выберите пользователя для редактирования.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Проверяем, что кликнули по строке с данными, а не по заголовку
+            if (e.RowIndex >= 0)
+            {
+                int id = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id"].Value);
+                string fullName = dataGridView1.Rows[e.RowIndex].Cells["full_name"].Value.ToString();
+
+                if (MessageBox.Show($"Вы точно хотите удалить пользователя:\n{fullName}?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        DbHelper.ExecuteNonQuery($"DELETE FROM users WHERE id = {id}");
+                        MessageBox.Show("Пользователь удален!");
+                        LoadUsers(); // Обновляем таблицу
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Невозможно удалить пользователя (возможно, у него есть заказы).\nОшибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }
