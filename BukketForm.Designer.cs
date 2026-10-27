@@ -67,7 +67,7 @@
             this.cmbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProducts.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.cmbProducts.FormattingEnabled = true;
-            this.cmbProducts.Location = new System.Drawing.Point(90, 19);
+            this.cmbProducts.Location = new System.Drawing.Point(109, 17);
             this.cmbProducts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cmbProducts.Name = "cmbProducts";
             this.cmbProducts.Size = new System.Drawing.Size(449, 24);

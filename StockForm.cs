@@ -11,10 +11,18 @@ namespace Electrical_Store
         private int pageSize = 10;
         private int totalRecords = 0;
 
+        private string searchTerm = "";
+
         // Конструктор (убрал лишние привязки событий)
         public StockForm()
         {
             InitializeComponent();
+
+            this.btnSearch.Click += (s, e) => {
+                searchTerm = txtSearch.Text.Trim();
+                currentPage = 1;
+                LoadStock();
+            };
 
             // --- НАСТРОЙКА DataGridView ---
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -49,22 +57,33 @@ namespace Electrical_Store
         {
             try
             {
-                DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM stock");
+                // 1. Условие поиска
+                string whereClause = string.IsNullOrEmpty(searchTerm)
+                    ? ""
+                    : $"WHERE p.name LIKE '%{searchTerm}%' OR s.location LIKE '%{searchTerm}%'";
+
+                // 2. Считаем общее количество (с учетом JOIN!)
+                string countQuery = $@"SELECT COUNT(*) FROM stock s 
+                               JOIN products p ON s.product_id = p.id 
+                               {whereClause}";
+                DataTable dtCount = DbHelper.ExecuteQuery(countQuery);
                 totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
 
+                // 3. Загружаем данные
                 int offset = (currentPage - 1) * pageSize;
                 string query = $@"SELECT s.id, p.name as product_name, s.quantity, 
-                                         s.reserved_quantity, s.min_stock_level, s.location 
-                                  FROM stock s 
-                                  JOIN products p ON s.product_id = p.id 
-                                  LIMIT {pageSize} OFFSET {offset}";
+                                 s.reserved_quantity, s.min_stock_level, s.location 
+                          FROM stock s 
+                          JOIN products p ON s.product_id = p.id 
+                          {whereClause}
+                          LIMIT {pageSize} OFFSET {offset}";
 
                 DataTable dt = DbHelper.ExecuteQuery(query);
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     dataGridView1.DataSource = dt;
-                    FormatGrid();
+                    FormatGrid(); // Ваш метод форматирования
                 }
                 else
                 {

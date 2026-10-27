@@ -80,22 +80,51 @@ namespace Electrical_Store
 
         private void buttonCheckout_Click(object sender, EventArgs e)
         {
-            if (cart.Count == 0)
+            if (cart.Count == 0) { MessageBox.Show("Корзина пуста!"); return; }
+
+            if (MessageBox.Show("Оформить заказ?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+
+            try
             {
-                MessageBox.Show("Корзина пуста!");
-                return;
+                // 1. Генерируем уникальный номер заказа
+                string orderNumber = "ORD-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                decimal total = 0;
+                foreach (var item in cart) total += item.Total;
+
+                // 2. Создаем сам заказ (привязываем к текущему пользователю, если нужно, или ставим заглушку)
+                // Предположим, что Session.CurrentUserId хранит ID того, кто оформляет (если вы это добавили)
+                int sellerId = Session.CurrentUserRoleId == 4 ? 2 : 1; // Пример: если продавец, то ID 2, иначе 1
+
+                string queryOrder = $@"INSERT INTO orders (order_number, customer_name, seller_id, status, total_amount) 
+                               VALUES ('{orderNumber}', 'Розничный клиент', {sellerId}, 'new', {total.ToString(System.Globalization.CultureInfo.InvariantCulture)})";
+
+                DbHelper.ExecuteNonQuery(queryOrder);
+
+                // 3. Получаем ID только что созданного заказа
+                DataTable dtId = DbHelper.ExecuteQuery("SELECT LAST_INSERT_ID()");
+                int newOrderId = Convert.ToInt32(dtId.Rows[0][0]);
+
+                // 4. Сохраняем позиции заказа
+                foreach (var item in cart)
+                {
+                    string queryItem = $@"INSERT INTO order_items (order_id, product_id, quantity, unit_price, total_price) 
+                                  VALUES ({newOrderId}, {item.ProductId}, {item.Quantity}, 
+                                          {item.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}, 
+                                          {item.Total.ToString(System.Globalization.CultureInfo.InvariantCulture)})";
+                    DbHelper.ExecuteNonQuery(queryItem);
+                }
+
+                MessageBox.Show($"Заказ №{orderNumber} успешно оформлен!");
+
+                // Очищаем корзину
+                cart.Clear();
+                UpdateGrid();
+                this.Close(); // Закрываем корзину, возвращаемся к товарам
             }
-
-            // Здесь должна быть логика сохранения заказа в БД (таблицы orders и order_items)
-            // Для примера просто откроем чек
-            decimal total = 0;
-            foreach (var item in cart) total += item.Total;
-
-            CheakForm checkForm = new CheakForm("Козлов Кирилл Дмитриевич", new Random().Next(1000, 9999).ToString(), cart, total);
-            checkForm.ShowDialog();
-
-            cart.Clear();
-            UpdateGrid();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при оформлении заказа: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

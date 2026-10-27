@@ -10,166 +10,120 @@ namespace Electrical_Store
         private int currentPage = 1;
         private int pageSize = 10;
         private int totalRecords = 0;
-
-        private int _roleId;
-
-        // Объявляем переменную на уровне всего класса
+        private string searchTerm = "";
         private bool _canEdit;
 
-        // Конструктор с параметром (по умолчанию true)
-        public ProductForm(bool canEdit = true, int roleId = 1)
+        public ProductForm(bool canEdit = true)
         {
             InitializeComponent();
-
-            // Присваиваем значение
             _canEdit = canEdit;
-            _roleId = roleId;
 
-            // --- НАСТРОЙКА DataGridView ---
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.DefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Regular);
-            dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Verdana", 10F, FontStyle.Bold);
-            dataGridView1.RowTemplate.Height = 30;
 
-            // --- ПРОВЕРКА ПРАВ (Скрываем кнопки для продавца) ---
             if (!_canEdit)
             {
-                button1.Visible = false; // Кнопка "Добавить"
-                button2.Visible = false; // Кнопка "Изменить"
-                                         // Если кнопки называются иначе (например, buttonAdd, buttonEdit), замените их имена здесь
-
-                dataGridView1.ContextMenuStrip = null; // Отключаем меню ПКМ (удаление)
+                if (button1 != null) button1.Visible = false; // Добавить
+                if (button2 != null) button2.Visible = false; // Изменить
+                dataGridView1.ContextMenuStrip = null;
             }
-
-            // Настройка кнопок пагинации (напоминаю, проверьте их имена в дизайнере)
-            try
-            {
-                button4.Text = "Вперёд >"; button4.ForeColor = Color.White; button4.BackColor = Color.Black;
-                button6.Text = "< Назад"; button6.ForeColor = Color.White; button6.BackColor = Color.Black;
-            }
-            catch { }
 
             LoadProducts();
-            _roleId = roleId;
         }
 
         private void LoadProducts()
         {
             try
             {
-                DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM products");
-                totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
+                string whereClause = string.IsNullOrEmpty(searchTerm) ? "" : $"WHERE p.name LIKE '%{searchTerm}%' OR p.sku LIKE '%{searchTerm}%'";
+                DataTable dtCount = DbHelper.ExecuteQuery($"SELECT COUNT(*) FROM products p {whereClause}");
+
+                if (dtCount != null && dtCount.Rows.Count > 0)
+                    totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
 
                 int offset = (currentPage - 1) * pageSize;
                 string query = $@"SELECT p.id, p.sku, p.name, c.name as category, p.brand, p.retail_price, p.warranty_months 
                                   FROM products p 
                                   LEFT JOIN categories c ON p.category_id = c.id 
+                                  {whereClause}
                                   LIMIT {pageSize} OFFSET {offset}";
 
                 DataTable dt = DbHelper.ExecuteQuery(query);
-                dataGridView1.DataSource = dt;
 
-                if (dataGridView1.Columns.Count > 0)
+                if (dt != null)
                 {
-                    dataGridView1.Columns["id"].Visible = false;
-                    dataGridView1.Columns["sku"].HeaderText = "Артикул";
-                    dataGridView1.Columns["name"].HeaderText = "Наименование";
-                    dataGridView1.Columns["category"].HeaderText = "Категория";
-                    dataGridView1.Columns["brand"].HeaderText = "Бренд";
-                    dataGridView1.Columns["retail_price"].HeaderText = "Цена";
-                    dataGridView1.Columns["warranty_months"].HeaderText = "Гарантия";
+                    dataGridView1.DataSource = dt;
+
+                    // Безопасная настройка заголовков
+                    if (dataGridView1.Columns["id"] != null) dataGridView1.Columns["id"].Visible = false;
+                    if (dataGridView1.Columns["sku"] != null) dataGridView1.Columns["sku"].HeaderText = "Артикул";
+                    if (dataGridView1.Columns["name"] != null) dataGridView1.Columns["name"].HeaderText = "Наименование";
+                    if (dataGridView1.Columns["category"] != null) dataGridView1.Columns["category"].HeaderText = "Категория";
+                    if (dataGridView1.Columns["brand"] != null) dataGridView1.Columns["brand"].HeaderText = "Бренд";
+                    if (dataGridView1.Columns["retail_price"] != null) dataGridView1.Columns["retail_price"].HeaderText = "Цена";
+                    if (dataGridView1.Columns["warranty_months"] != null) dataGridView1.Columns["warranty_months"].HeaderText = "Гарантия";
+                }
+                else
+                {
+                    dataGridView1.DataSource = null;
                 }
 
-                int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-                if (totalPages == 0) totalPages = 1;
-                label1.Text = $"Всего записей: {totalRecords} | Стр. {currentPage} из {totalPages}";
+                UpdatePageButtons();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка: " + ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show("Ошибка: " + ex.Message); }
         }
 
-        // События пагинации
-        private void button4_Click(object sender, EventArgs e) // Вперёд
+        private void UpdatePageButtons()
         {
             int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            if (currentPage < totalPages) { currentPage++; LoadProducts(); }
+            if (totalPages == 0) totalPages = 1;
+
+            if (label1 != null) label1.Text = $"Всего записей: {totalRecords} | Стр. {currentPage} из {totalPages}";
+
+            try
+            {
+                button4.Enabled = currentPage < totalPages; // Вперёд
+                button6.Enabled = currentPage > 1;          // Назад
+            }
+            catch { }
         }
 
-        private void button6_Click(object sender, EventArgs e) // Назад
-        {
-            if (currentPage > 1) { currentPage--; LoadProducts(); }
-        }
+        // Обработчики кнопок
+        private void button4_Click(object sender, EventArgs e) { int t = (int)Math.Ceiling((double)totalRecords / pageSize); if (currentPage < t) { currentPage++; LoadProducts(); } }
+        private void button6_Click(object sender, EventArgs e) { if (currentPage > 1) { currentPage--; LoadProducts(); } }
 
-        // Событие кнопки Добавить
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            // Проверка на всякий случай (хотя кнопка скрыта для продавца)
-            if (!_canEdit) return;
-
-            if (new InputProductForm().ShowDialog() == DialogResult.OK)
-            {
-                currentPage = 1;
-                LoadProducts();
-            }
+            if (new CreateForm("Product").ShowDialog() == DialogResult.OK) { currentPage = 1; LoadProducts(); }
         }
 
-        // Событие кнопки Изменить
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            if (!_canEdit) return;
-
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (dataGridView1.SelectedRows.Count > 0 && dataGridView1.SelectedRows[0].Cells["id"] != null)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id"].Value);
-                if (new InsertProductForm(id).ShowDialog() == DialogResult.OK) LoadProducts();
+                if (new InsertForm("Product", id).ShowDialog() == DialogResult.OK) LoadProducts();
             }
             else MessageBox.Show("Выберите товар.");
         }
 
-        // Кнопка Выход (оставляем только ОДИН этот метод, чтобы не было ошибки CS0111)
-        private void buttonExit_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Текущая роль в сессии: " + Session.CurrentUserRoleId.ToString(), "Отладка");
-            // -------------------
-
-            if (Session.CurrentUserRoleId == 1)
-            {
-                AdminForm admin = new AdminForm();
-                admin.Show();
-            }
-            else if (Session.CurrentUserRoleId == 2)
-            {
-                MechendaizerForm merch = new MechendaizerForm();
-                merch.Show();
-            }
-            else if (Session.CurrentUserRoleId == 4)
-            {
-                BuyerForm buyer = new BuyerForm();
-                buyer.Show();
-            }
-
-            this.Close();
-        }
-
-        // Кнопка Корзина
-        private void button5_Click(object sender, EventArgs e)
-        {
-            new BukketForm().ShowDialog();
-        }
-
+        private void buttonExit_Click(object sender, EventArgs e) => this.Close();
+        private void button5_Click(object sender, EventArgs e) => new BukketForm().ShowDialog();
+        // Метод для Двойного клика по таблице (Удаление)
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // Если у пользователя нет прав на редактирование (продавец), блокируем удаление
             if (!_canEdit) return;
 
+            // Проверяем, что кликнули по строке с данными, а не по заголовку
             if (e.RowIndex >= 0)
             {
+                // Проверка на существование ячейки (защита от NullReference)
+                if (dataGridView1.Rows[e.RowIndex].Cells["id"].Value == null) return;
+
                 int id = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["id"].Value);
                 string productName = dataGridView1.Rows[e.RowIndex].Cells["name"].Value.ToString();
 
@@ -183,10 +137,20 @@ namespace Electrical_Store
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Невозможно удалить товар (он есть на складе или в заказах).\nОшибка: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Проверяем на ошибку внешнего ключа (когда товар уже в заказе или на складе)
+                        if (ex.Message.Contains("foreign key") || ex.Message.Contains("Cannot delete"))
+                        {
+                            MessageBox.Show("Невозможно удалить товар!\n\nЭтот товар уже присутствует в оформленных заказах или на складе. Сначала удалите связанные записи.",
+                                            "Запрещено", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ошибка при удалении: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
         }
     }
+
 }

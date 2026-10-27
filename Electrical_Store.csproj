@@ -102,48 +102,18 @@
     <Compile Include="CheakForm.Designer.cs">
       <DependentUpon>CheakForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateForm.Designer.cs">
+      <DependentUpon>CreateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DbHelper.cs" />
-    <Compile Include="InputOrderForm.cs">
+    <Compile Include="InsertForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InputOrderForm.Designer.cs">
-      <DependentUpon>InputOrderForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InputProductForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InputProductForm.Designer.cs">
-      <DependentUpon>InputProductForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InputStockForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InputStockForm.Designer.cs">
-      <DependentUpon>InputStockForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InputUserForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InputUserForm.Designer.cs">
-      <DependentUpon>InputUserForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InsertOrderForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InsertOrderForm.Designer.cs">
-      <DependentUpon>InsertOrderForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InsertProductForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InsertProductForm.Designer.cs">
-      <DependentUpon>InsertProductForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InsertUserForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InsertUserForm.Designer.cs">
-      <DependentUpon>InsertUserForm.cs</DependentUpon>
+    <Compile Include="InsertForm.Designer.cs">
+      <DependentUpon>InsertForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -195,6 +165,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="AdminForm.resx">
       <DependentUpon>AdminForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -210,26 +181,8 @@
     <EmbeddedResource Include="CheakForm.resx">
       <DependentUpon>CheakForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InputOrderForm.resx">
-      <DependentUpon>InputOrderForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InputProductForm.resx">
-      <DependentUpon>InputProductForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InputStockForm.resx">
-      <DependentUpon>InputStockForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InputUserForm.resx">
-      <DependentUpon>InputUserForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InsertOrderForm.resx">
-      <DependentUpon>InsertOrderForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InsertProductForm.resx">
-      <DependentUpon>InsertProductForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InsertUserForm.resx">
-      <DependentUpon>InsertUserForm.cs</DependentUpon>
+    <EmbeddedResource Include="CreateForm.resx">
+      <DependentUpon>CreateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

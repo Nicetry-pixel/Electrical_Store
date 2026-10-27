@@ -15,6 +15,14 @@ namespace Electrical_Store
         {
             InitializeComponent();
 
+            // В конструкторе формы UserForm:
+            dataGridView1.CellFormatting += (s, ev) => {
+                if (ev.ColumnIndex == dataGridView1.Columns["full_name"].Index && ev.Value != null)
+                    ev.Value = Utils.MaskName(ev.Value.ToString());
+                if (ev.ColumnIndex == dataGridView1.Columns["phone"].Index && ev.Value != null)
+                    ev.Value = Utils.MaskPhone(ev.Value.ToString());
+            };
+
             // --- НАСТРОЙКА DataGridView ---
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.MultiSelect = false;
@@ -40,19 +48,26 @@ namespace Electrical_Store
             LoadUsers();
         }
 
+
+        private string searchTerm = "";
+
+
         private void LoadUsers()
         {
             try
             {
-                DataTable dtCount = DbHelper.ExecuteQuery("SELECT COUNT(*) FROM users");
+                string whereClause = string.IsNullOrEmpty(searchTerm) ? "" : $"WHERE u.full_name LIKE '%{searchTerm}%' OR u.login LIKE '%{searchTerm}%'";
+                DataTable dtCount = DbHelper.ExecuteQuery($"SELECT COUNT(*) FROM users u {whereClause}");
+                totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
+
                 totalRecords = Convert.ToInt32(dtCount.Rows[0][0]);
 
                 int offset = (currentPage - 1) * pageSize;
                 string query = $@"SELECT u.id, u.login, u.full_name, u.email, u.phone, r.name as role_name, u.is_active 
-                                  FROM users u 
-                                  JOIN roles r ON u.role_id = r.id 
-                                  LIMIT {pageSize} OFFSET {offset}";
-
+                      FROM users u 
+                      JOIN roles r ON u.role_id = r.id 
+                      {whereClause}
+                      LIMIT {pageSize} OFFSET {offset}";
                 DataTable dt = DbHelper.ExecuteQuery(query);
                 dataGridView1.DataSource = dt;
 
@@ -102,7 +117,8 @@ namespace Electrical_Store
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (new InputUserForm().ShowDialog() == DialogResult.OK)
+            // Передаем тип "User"
+            if (new CreateForm("User").ShowDialog() == DialogResult.OK)
             {
                 currentPage = 1;
                 LoadUsers();
@@ -114,16 +130,19 @@ namespace Electrical_Store
             if (dataGridView1.SelectedRows.Count > 0)
             {
                 int id = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id"].Value);
-                if (new InsertUserForm(id).ShowDialog() == DialogResult.OK)
+                // Передаем тип "User" и ID
+                if (new InsertForm("User", id).ShowDialog() == DialogResult.OK)
                 {
                     LoadUsers();
                 }
             }
             else
             {
-                MessageBox.Show("Выберите пользователя для редактирования.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Выберите пользователя для редактирования.");
             }
         }
+
+      
 
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -147,6 +166,13 @@ namespace Electrical_Store
                     }
                 }
             }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            searchTerm = txtSearch.Text.Trim();
+            currentPage = 1; // Сбрасываем на первую страницу при поиске
+            LoadUsers();
         }
     }
 }
