@@ -110,7 +110,27 @@ namespace Electrical_Store
             else MessageBox.Show("Выберите товар.");
         }
 
-        private void buttonExit_Click(object sender, EventArgs e) => this.Close();
+        private void buttonExit_Click(object sender, EventArgs e)
+        {
+            // Проверяем роль из сессии
+            if (Session.CurrentUserRoleId == 2) 
+            {
+                MechendaizerForm merch = new MechendaizerForm();
+                merch.Show();
+            }
+            else if (Session.CurrentUserRoleId == 1 )
+            {
+                AdminForm admin = new AdminForm();
+                admin.Show();
+            }
+            else if (Session.CurrentUserRoleId == 4)
+            {
+                BuyerForm buyer = new BuyerForm();
+                buyer.Show();
+            }
+
+            this.Close();
+        }
         private void button5_Click(object sender, EventArgs e) => new BukketForm().ShowDialog();
         // Метод для Двойного клика по таблице (Удаление)
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)

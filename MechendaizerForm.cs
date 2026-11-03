@@ -19,7 +19,9 @@ namespace Electrical_Store
 
         private void button4_Click(object sender, EventArgs e)
         {
-
+            OrderMechendaizerForm orders = new OrderMechendaizerForm();
+            orders.Show();
+            this.Hide();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -27,6 +29,20 @@ namespace Electrical_Store
             LoginForm form = new LoginForm();
             form.Show();
             this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ProductForm products = new ProductForm(true);
+            products.Show();
+            this.Hide();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            StockForm stock = new StockForm();
+            stock.Show();
+            this.Hide();
         }
     }
 }
